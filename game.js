@@ -8,6 +8,7 @@ $(function(){
     var car_3 = $('#car3');
     var car_4 = $('#car4');
     var car_5 = $('#car5');
+    var car_6 = $('#car6');
     var car = $('#car');
     var road_width = parseInt(768+'px');
     var road_left = parseInt(road.css('left'));
@@ -26,13 +27,31 @@ $(function(){
     var line_speed = 5;
     var left_speed = car_speed;
     var anim_id;
-    var restart_div = $('#restart-div');
+  //  var restart_div = $('#restart-div');
     var restart_btn = $('#restart');
     var score = 0;
     var sound =$('#carsound');
     var score_span = $('#score-value');
     var count_space = 0;
+    // var change_car = $("#change-car")
+    // var change_car_count = 0;
     anim_id = requestAnimationFrame(animation);
+    // change_car.click(function() {
+    //     change_car_count++;
+    //     if(change_car_count%2==0){
+    //         alert("1");
+    //         document.getElementById("car").style.backgroundcolor="red";
+    //         document.getElementById("car6").style.backgroundcolor="black";
+    //     }
+    //     else{
+    //         alert("2");
+    //         document.getElementById("car").style.backgroundcolor="black";
+    //         document.getElementById("car6").style.backgroundcolor="red";
+            
+    //     }
+    // });
+
+
     $(document).on('keydown',function(e){
         if(game_over===false && count_space%2==0){
             var key = e.keyCode
@@ -122,7 +141,7 @@ $(function(){
     }
     function move_car_right(){
         var main_car_left = parseInt(car.css('left'));
-        if (game_over === false && main_car_left<0.92*road_width) {
+        if (game_over === false && main_car_left<0.89*road_width) {
         car.css('left',main_car_left+left_speed);
         move_right = requestAnimationFrame(move_car_right);
         }
@@ -132,7 +151,15 @@ $(function(){
         document.getElementById("carsound").play();
             document.getElementById("carsound").volume = 0.5;
         if(collision(car,car_1) || collision(car,car_2) || collision(car,car_3) || collision(car,car_4) || collision(car,car_5)){
-            stop_the_game();
+            cancelAnimationFrame(anim_id);
+            cancelAnimationFrame(move_left);
+            cancelAnimationFrame(move_right);
+            cancelAnimationFrame(move_up);
+            cancelAnimationFrame(move_down);
+            document.getElementById("carsound").pause();
+            document.getElementById("road").style.visibility="hidden";
+            restart_btn.slideDown();
+            restart_btn.focus();
             return;
         }
         score++;
@@ -169,20 +196,23 @@ $(function(){
         move_line(line_3);
         anim_id = requestAnimationFrame(animation);
     }
-    function stop_the_game(){
-        cancelAnimationFrame(anim_id);
-        cancelAnimationFrame(move_left);
-        cancelAnimationFrame(move_right);
-        document.getElementById("carsound").pause();
-        restart_div.slideDown();
-        restart_btn.focus();
-    }
+    // function stop_the_game(){
+    //     cancelAnimationFrame(anim_id);
+    //     cancelAnimationFrame(move_left);
+    //     cancelAnimationFrame(move_right);
+    //     cancelAnimationFrame(move_up);
+    //     cancelAnimationFrame(move_down);
+    //     document.getElementById("carsound").pause();
+    //     document.getElementById("road").style.visibilty="hidden";
+    //     restart_btn.slideDown();
+    //     restart_btn.focus();
+    // }
     function move_car(cart){
         var car_top = parseInt(cart.css('top'));
         var car_left;
         if(car_top>road_height){
             car_top -=(1.08*road_height);
-            car_left = parseInt(Math.random()*(road_width-car_width));
+            car_left = parseInt(Math.random()*(0.89*road_width));
             cart.css('left',car_left);
         }
         cart.css('top',car_top+car_speed);
